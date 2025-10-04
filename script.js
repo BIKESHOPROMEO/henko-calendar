@@ -4,8 +4,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   const nextBtn = document.getElementById("nextWeek");
   const params = new URLSearchParams(window.location.search);
   const originalId = params.get("id");
-  const originalDate = params.get("date");
-  const originalTime = params.get("time");
+  const originalDate = params.get("originalDate");
+  const originalTime = params.get("originalTime");
 
     let holidayDates = [];
 
