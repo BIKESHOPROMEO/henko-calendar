@@ -2,6 +2,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   const calendarEl = document.getElementById("calendar");
   const prevBtn = document.getElementById("prevWeek");
   const nextBtn = document.getElementById("nextWeek");
+  const params = new URLSearchParams(window.location.search);
+  const originalId = params.get("id");
+  const originalDate = params.get("date");
+  const originalTime = params.get("time");
 
     let holidayDates = [];
 
@@ -138,10 +142,13 @@ document.addEventListener("DOMContentLoaded", async () => {
           cell.textContent = "◎";
           cell.classList.add("available");
           cell.addEventListener("click", () => {
-            const url = new URL("https://yoyaku-form.vercel.app/");
-            url.searchParams.set("date", d.date);
-            url.searchParams.set("time", hour);
-            window.location.href = url.toString();
+            const url = new URL("https://henko-form.vercel.app/");
+             url.searchParams.set("id", originalId);         // 元予約ID
+             url.searchParams.set("date", d.date);           // 新しい予約日
+             url.searchParams.set("time", hour);             // 新しい予約時間
+             url.searchParams.set("originalDate", originalDate); // 元予約日（任意）
+             url.searchParams.set("originalTime", originalTime); // 元予約時間（任意）
+             window.location.href = url.toString();
           });
         } else {
           cell.textContent = "×";
