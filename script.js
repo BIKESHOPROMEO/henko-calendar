@@ -78,15 +78,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     let availableSlots = [];
     
+    let slotMap = new Set();
 
     try {
   const response = await fetch("/api/calendar-ava");
   const result = await response.json();
   availableSlots = result.slots || [];
   console.log("availableSlots:", availableSlots);
-
-  // ✅ ここに入れる！
-  const slotMap = new Set();
+  
   availableSlots.forEach(slot => {
     slotMap.add(`${slot.date}_${slot.time}`);
   });
