@@ -80,13 +80,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     
 
     try {
-      const response = await fetch("/api/calendar-ava");
-      const result = await response.json();
-      availableSlots = result.slots || [];
-      console.log("availableSlots:",availableSlots);
-    }catch (err){
-      console.error("API取得失敗:", err);      
-    }       
+  const response = await fetch("/api/calendar-ava");
+  const result = await response.json();
+  availableSlots = result.slots || [];
+  console.log("availableSlots:", availableSlots);
+
+  // ✅ ここに入れる！
+  const slotMap = new Set();
+  availableSlots.forEach(slot => {
+    slotMap.add(`${slot.date}_${slot.time}`);
+  });
+
+} catch (err) {
+  console.error("API取得失敗:", err);
+}
 
     const table = document.createElement("table");
 
@@ -125,9 +132,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         const isToday = d.date === todayStr;
         const isFuture = d.date > todayStr;
 
-        const isAvailable = availableSlots.some(slot => {
-          return slot.date === d.date && slot.time === hour && slot.available;
-        });
+        const isReserved = slotMap.has(`${d.date}_${hour}`);
+        const isAvailable = !isReserved;
 
         if (isPast) {
           cell.textContent = "×";
@@ -141,18 +147,17 @@ document.addEventListener("DOMContentLoaded", async () => {
         } else if (isToday && !isAvailable) {
           cell.textContent = "×";
           cell.classList.add("unavailable");
-
         } else if (isFuture && isAvailable) {
           cell.textContent = "◎";
           cell.classList.add("available");
           cell.addEventListener("click", () => {
             const url = new URL("https://henko-form.vercel.app/");
-             url.searchParams.set("id", originalId);         // 元予約ID
-             url.searchParams.set("date", d.date);           // 新しい予約日
-             url.searchParams.set("time", hour);             // 新しい予約時間
-             url.searchParams.set("originalDate", originalDate); // 元予約日（任意）
-             url.searchParams.set("originalTime", originalTime); // 元予約時間（任意）
-             window.location.href = url.toString();
+            url.searchParams.set("id", originalId);
+            url.searchParams.set("date", d.date);
+            url.searchParams.set("time", hour);
+            url.searchParams.set("originalDate", originalDate);
+            url.searchParams.set("originalTime", originalTime);
+            window.location.href = url.toString();
           });
         } else {
           cell.textContent = "×";
