@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const originalId = params.get("id");
   const originalDate = params.get("originalDate");
   const originalTime = params.get("originalTime");
+  
 
     let holidayDates = [];
 
@@ -188,5 +189,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     weekOffset++;
     renderCalendar();
   });
+
 
 });
