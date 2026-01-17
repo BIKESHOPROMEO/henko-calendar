@@ -6,7 +6,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   const originalId = params.get("id");
   const originalDate = params.get("originalDate");
   const originalTime = params.get("originalTime");
-  
 
     let holidayDates = [];
 
@@ -190,5 +189,23 @@ document.addEventListener("DOMContentLoaded", async () => {
     renderCalendar();
   });
 
+    //自動更新ロジック（5分操作無しでページ更新）
+  let idleTime = 0;
+  const IDLE_LIMIT = 5;
+
+  //1分ごとにチェックするタイマー
+  const idleInterval = setInterval(() => {
+      idleTime++;
+      if (idleTime >= IDLE_LIMIT) {
+        window.location.reload();
+      }
+  }, 60000);
+
+  //画面操作があればカウントをリセット
+  ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'].forEach(eventName => {
+    document.addEventListener(eventName, () => {
+      idleTime = 0;
+    });
+  });
 
 });
